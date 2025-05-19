@@ -123,7 +123,6 @@ def contact(
         dim=1,
     )
 
-
 def base_orientation(
     env: ManagerBasedRLEnv,
     limit: float,
@@ -160,6 +159,54 @@ def air_time(
     cstr = (limit - last_air_time) * touchdown.float() * command_more_than_limit
     return cstr
 
+# def feet_slide(
+#     env: ManagerBasedRLEnv,
+#     vel_lim: float,
+#     names: list[str],
+#     velocity_deadzone: float,
+#     contact_cfg: SceneEntityCfg = SceneEntityCfg("contact_forces"),
+#     asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
+# ) -> torch.Tensor:
+#     contact_sensor = env.scene[contact_cfg.name]
+#     feet_ids, _ = contact_sensor.find_bodies(names, preserve_order=True)
+#     asset = env.scene[asset_cfg.name].data
+#     feet_vel = asset.body_lin_vel_w[:, feet_ids, :2]
+#     contact_forces = contact_sensor.data.net_forces_w_history[:, :, feet_ids, :]
+#     contacts = contact_forces.norm(dim=-1).max(dim=1)[0] > 1.0
+#     command_more_than_limit = (
+#         (torch.norm(env.command_manager.get_command("base_velocity")[:, :3], dim=1) > velocity_deadzone)
+#         .float()
+#         .unsqueeze(1)
+#     )
+
+#     contacts_mask = contacts.float().unsqueeze(-1)
+#     command_mask = command_more_than_limit.unsqueeze(-1)
+
+#     cstr = (vel_lim - feet_vel.norm(dim=-1, keepdim=True)) * contacts_mask * command_mask
+#     return cstr.squeeze(-1)
+
+# def feet_clearance(
+#     env: ManagerBasedRLEnv,
+#     height: float,
+#     names: list[str],
+#     velocity_deadzone: float,
+#     contact_cfg: SceneEntityCfg = SceneEntityCfg("contact_forces"),
+#     asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
+# ) -> torch.Tensor:
+#     contact_sensor = env.scene[contact_cfg.name]
+#     feet_ids, _ = contact_sensor.find_bodies(names, preserve_order=True)
+#     asset = env.scene[asset_cfg.name].data
+#     foot_height = asset.body_pos_w[:, feet_ids, 2]
+#     command_more_than_limit = (
+#         (
+#             torch.norm(env.command_manager.get_command("base_velocity")[:, :3], dim=1)
+#             > velocity_deadzone
+#         )
+#         .float()
+#         .unsqueeze(1)
+#     )
+#     cstr = (height - foot_height) * command_more_than_limit
+#     return cstr
 
 def n_foot_contact(
     env: ManagerBasedRLEnv,

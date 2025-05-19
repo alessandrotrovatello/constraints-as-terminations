@@ -1,0 +1,6 @@
+# Outputs
+**/logs/*
+**/outputs/*
+rsync.sh
+slurm.sh
+
