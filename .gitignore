@@ -1,6 +1,7 @@
 # Outputs
 **/logs/*
 **/outputs/*
+**/__pycache__/
 rsync.sh
 slurm.sh
 
